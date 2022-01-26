@@ -17,15 +17,15 @@ def main():
 
     # create dictionary mapping state codes to clean state names
     states = {'0': 'India',
-              '01': 'Jammu & Kashmir and Ladakh',
-              '02': 'Himachal Pradesh',
-              '03': 'Punjab',
-              '04': 'Other Union Territories',
-              '05': 'Uttarakhand',
-              '06': 'Haryana',
-              '07': 'Delhi',
-              '08': 'Rajasthan',
-              '09': 'Uttar Pradesh',
+              '1': 'Jammu & Kashmir and Ladakh',
+              '2': 'Himachal Pradesh',
+              '3': 'Punjab',
+              '4': 'Other Union Territories',
+              '5': 'Uttarakhand',
+              '6': 'Haryana',
+              '7': 'Delhi',
+              '8': 'Rajasthan',
+              '9': 'Uttar Pradesh',
               '10': 'Bihar',
               '11': 'Sikkim',
               '12': 'Arunachal Pradesh',
@@ -38,7 +38,7 @@ def main():
               '19': 'West Bengal',
               '20': 'Jharkhand',
               '21': 'Odisha',
-              '22': 'Chattisgarh',
+              '22': 'Chhattisgarh',
               '23': 'Madhya Pradesh',
               '24': 'Gujarat',
               '25': 'Other Union Territories',
@@ -54,6 +54,9 @@ def main():
               '35': 'Other Union Territories'}
 
     df['state'] = df['state_code'].map(states)
+
+    # clean age column to remove + signs - useful in later steps
+    df['age'] = df['age'].str.replace('+', '')
 
     # export as csv for use in other scripts
     df.to_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/pop_by_age_and_state.csv', index=False)
