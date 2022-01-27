@@ -80,7 +80,7 @@ def main():
     df_neo_lung['total_population'] = pop_all_ages['pop']
     df_neo_lung['endpoint'] = 'neo_lung'
 
-    # join in the lung cancer data to get lri baseline mortality rates
+    # join in the lung cancer data to get lung cancer baseline mortality rates
     df_neo_lung = pd.merge(df_neo_lung, neo_lung[['Location', 'Value']], how="left", left_on="state", right_on="Location")
 
     # fill in baseline mortality rate and baseline mortality columns
@@ -100,7 +100,7 @@ def main():
     res_copd = pd.read_csv(
         '/Users/kiratsingh/Desktop/research/india_coal/health/input/mortality_baseline/res_copd_state_baseline_2019.csv')
 
-    # create lung cancer df
+    # create copd df
     df_res_copd = pd.DataFrame(columns=['state_code',
                                         'state',
                                         'total_population',
@@ -112,7 +112,7 @@ def main():
     df_res_copd['total_population'] = pop_all_ages['pop']
     df_res_copd['endpoint'] = 'res_copd'
 
-    # join in the lung cancer data to get lri baseline mortality rates
+    # join in the copd data to get copd baseline mortality rates
     df_res_copd = pd.merge(df_res_copd, res_copd[['Location', 'Value']], how="left", left_on="state",
                            right_on="Location")
 
@@ -124,14 +124,17 @@ def main():
     # clean up
     df_res_copd = df_res_copd.drop(columns=['Value', 'Location'])
 
+    # append res_copd df to main df
+    df = df.append(df_res_copd)
+
     ###################################################################################################################
     ###################################################################################################################
 
-    # create df from csv containing copd mortality rates by state
+    # create df from csv containing type 2 diabetes mortality rates by state
     t2_dm = pd.read_csv(
         '/Users/kiratsingh/Desktop/research/india_coal/health/input/mortality_baseline/t2_dm_state_baseline_2019.csv')
 
-    # create lung cancer df
+    # create t2_dm df
     df_t2_dm = pd.DataFrame(columns=['state_code',
                                         'state',
                                         'total_population',
@@ -143,7 +146,7 @@ def main():
     df_t2_dm['total_population'] = pop_all_ages['pop']
     df_t2_dm['endpoint'] = 't2_dm'
 
-    # join in the lung cancer data to get lri baseline mortality rates
+    # join in the t2_dm data to get the t2_dm baseline mortality rates
     df_t2_dm = pd.merge(df_t2_dm, t2_dm[['Location', 'Value']], how="left", left_on="state",
                            right_on="Location")
 
@@ -155,7 +158,7 @@ def main():
     # clean up
     df_t2_dm = df_t2_dm.drop(columns=['Value', 'Location'])
 
-    # append lung cancer df to main df
+    # append t2_dm df to main df
     df = df.append(df_t2_dm)
 
     ###################################################################################################################
