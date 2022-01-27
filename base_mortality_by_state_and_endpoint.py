@@ -231,6 +231,74 @@ def main():
     # append ihd df to main df
     df = df.append(df_ihd_agg)
 
+    ###################################################################################################################
+    ###################################################################################################################
+
+    # iterate through the stroke files:
+    # for each file, parse the file name to get the age group that the file contains data for
+    # convert the contents of the file to a df with an additional column for age_lower
+    # append that df to the main stroke dataframe so we get one df containing the curves for all age groups
+
+    # initialise df to capture stroke dr curve from all age-specific files
+    df_stroke_dr = pd.DataFrame(columns=['state',
+                                      'endpoint',
+                                      'baseline_mortality_rate',
+                                      'age_lower'])
+
+    # assign directory
+    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/mortality_baseline/stroke"
+
+    # iterate over files in directory
+    for filename in os.listdir(directory):
+        split = filename.split('_')
+        file_age = split[2]
+        # filter pop_by_age to just this age group
+        file_pop = pop_by_age[pop_by_age['age_lower'] == file_age]
+        # get file path so we can open the file
+        filepath = os.path.join(directory, filename)
+        # iterate through the file - each row is a state
+        file = pd.read_csv(filepath)
+        file = file[file['Year'] == 2019]
+        file = file.rename(columns={"Location": "state",
+                                    "Cause of death or injury": "endpoint",
+                                    "Value": "baseline_mortality_rate"})
+        file = file.drop(columns=['Year', 'Age', 'Sex', 'Measure', 'Lower bound', 'Upper bound'])
+        file['endpoint'] = 'cvd_stroke'
+        file['age_lower'] = file_age
+        df_stroke_dr = df_stroke_dr.append(file)
+
+    # we now have a dataset the contains state and age-wise population, and a dataset that contains
+    # state and age-wise mortality rates
+    # we can left-join the latter onto the former to create a single dataset containing state, age-group,
+    # population in that age group, cvd_stroke bmr for that age group, and cvd_stroke baseline mortality
+    # for that age group
+    df_stroke = pd.merge(pop_by_age, df_stroke_dr, how="inner", left_on=["state", "age_lower"],
+                      right_on=["state", "age_lower"])
+    df_stroke['baseline_mortality'] = df_stroke['baseline_mortality_rate'] * df_stroke['pop'] * PER_100k
+
+    # aggregate to get state-level figures - specifically we want the total mortality across each state and the
+    # pop-weighted average mortality rate
+    df_stroke['bmr_times_pop'] = df_stroke['baseline_mortality_rate'] * df_stroke['pop']
+    df_stroke_agg = df_stroke.groupby(['state_code', 'state', 'endpoint'], as_index=False).agg({'pop': 'sum',
+                                                                                          'bmr_times_pop': 'sum',
+                                                                                          'baseline_mortality': 'sum'}
+                                                                                         )
+    df_stroke_agg['baseline_mortality_rate'] = df_stroke_agg['bmr_times_pop'] / df_stroke_agg['pop']
+    df_stroke_agg = df_stroke_agg.drop(columns=['bmr_times_pop'])
+    df_stroke_agg = df_stroke_agg.rename(columns={"pop": "total_population"})
+    df_stroke_agg = df_stroke_agg[["state_code",
+                             "state",
+                             "total_population",
+                             "endpoint",
+                             "baseline_mortality_rate",
+                             "baseline_mortality"]]
+
+    # append ihd df to main df
+    df = df.append(df_stroke_agg)
+
+    ###################################################################################################################
+    ###################################################################################################################
+
     # export as csv for use in other scripts
     df.to_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/base_mortality_by_state_and_endpoint.csv', index=False)
 
