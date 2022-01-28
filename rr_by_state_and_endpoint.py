@@ -153,21 +153,6 @@ def main():
     ###################################################################################################################
     ###################################################################################################################
 
-    # to create the df from ihd, we need to account for the fact that there is a different distribution of
-    # age groups in different states
-    # for every state, we need to compute a weighted average of relative risk values at every level of
-    # pm 2.5 exposure
-    # to do so, we can:
-    # 1. take pop_by_age_and_state and create an age_lower column
-    # 2. remove under 25s from pop_by_age
-    # 3. compute the weights of each age bucket
-    #   i. compute the total population by state
-    #   ii. join it back in on state
-    #   iii. compute the weight of each age bracket as the pop/total
-    # 4. left-join the corresponding rr files
-    # 5. coalesce the rr columns into a single column
-    # 6. aggregate the df, sum the column computed in 6. by state
-
     # create age_lower column in pop_by_age_and_state
     pop = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/pop_by_age_and_state.csv')
     pop_by_age = pop
@@ -274,6 +259,97 @@ def main():
                                             "weighted_max_rr": "max_rr"})
 
     df = df.append(df_ihd_agg)
+
+    ###################################################################################################################
+    ###################################################################################################################
+
+    # join the rr files
+
+    # initialise dataframe to be populated
+    df_stroke = pd.DataFrame(columns=['state_code',
+                                   'state',
+                                   'endpoint',
+                                   'age_lower',
+                                   'age_weight'
+                                   'conc',
+                                   'mean_rr',
+                                   'min_rr',
+                                   'max_rr'])
+
+    # loop through the dictionary containing the rr curves
+
+    # assign directory
+    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/cvd_stroke"
+
+    # iterate over files in directory
+    for filename in os.listdir(directory):
+        filepath = os.path.join(directory, filename)
+        file = pd.read_csv(filepath)
+        split = filename.split('_')
+        file_age = split[2]
+        file_age = file_age.split('.')[0]
+        # file_age points to the age_lower that this file contains the rr for
+        # we filter pop_by_age to just the rows where age_lower = file_age
+        # this gives us a subset consisting of 35 rows - one row per state since
+        # we're only looking at one age group
+        file_weights = pop_by_age[pop_by_age['age_lower'] == file_age]
+        # add endpoint column
+        file_weights['endpoint'] = 'cvd_stroke'
+        # only keep columns we are interested in
+        file_weights = file_weights[['state_code',
+                                     'state',
+                                     'endpoint',
+                                     'age_lower',
+                                     'age_weight']]
+        # create key column in file for merge
+        file['age_lower'] = file_age
+        # with file_weights on the left, we merge in file from the right on age_lower
+        file_weights = pd.merge(file_weights, file[['age_lower',
+                                                    'conc',
+                                                    'mean',
+                                                    'min',
+                                                    'max']],
+                                how="left",
+                                left_on="age_lower",
+                                right_on="age_lower")
+        # rename rr columns as needed
+        file_weights = file_weights.rename(columns={"mean": "mean_rr",
+                                                    "min": "min_rr",
+                                                    "max": "max_rr",
+                                                    "age_lower_x": "age_lower"})
+        # reorder columns to make sure they reflect the column order of df_ihd
+        file_weights = file_weights[['state_code',
+                                     'state',
+                                     'endpoint',
+                                     'age_lower',
+                                     'age_weight',
+                                     'conc',
+                                     'mean_rr',
+                                     "min_rr",
+                                     "max_rr"]]
+
+        # calculate the weighted-rr per state and age group
+        file_weights['weighted_mean_rr'] = file_weights['age_weight'].astype(float) * file_weights['mean_rr'].astype(
+            float)
+        file_weights['weighted_min_rr'] = file_weights['age_weight'].astype(float) * file_weights['min_rr'].astype(
+            float)
+        file_weights['weighted_max_rr'] = file_weights['age_weight'].astype(float) * file_weights['max_rr'].astype(
+            float)
+
+        df_stroke = df_stroke.append(file_weights)
+
+    # group by state_code and state, sum rr values
+    df_stroke_agg = df_stroke.groupby(['state_code',
+                                 'state',
+                                 'endpoint',
+                                 'conc'], as_index=False).agg({'weighted_mean_rr': 'sum',
+                                                               'weighted_min_rr': 'sum',
+                                                               'weighted_max_rr': 'sum'})
+    df_stroke_agg = df_stroke_agg.rename(columns={"weighted_mean_rr": "mean_rr",
+                                            "weighted_min_rr": "min_rr",
+                                            "weighted_max_rr": "max_rr"})
+
+    df = df.append(df_stroke_agg)
 
     ###################################################################################################################
     ###################################################################################################################
