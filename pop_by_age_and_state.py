@@ -58,6 +58,13 @@ def main():
     # clean age column to remove + signs - useful in later steps
     df['age'] = df['age'].str.replace('+', '')
 
+    # remove age groups not used for this analysis
+    df = df[df['age'] != 'Age not stated']
+
+    # remove all-India category since this is a state-level table
+    df = df[df['state'] != 'India']
+
+
     # export as csv for use in other scripts
     df.to_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/pop_by_age_and_state.csv', index=False)
 

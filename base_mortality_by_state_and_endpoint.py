@@ -55,11 +55,14 @@ def main():
     df_lri['baseline_mortality_rate'] = df_lri['Value']
     df_lri['baseline_mortality'] = df_lri['baseline_mortality_rate'] * df_lri['total_population'] * PER_100k
 
+
     # clean up
     df_lri = df_lri.drop(columns=['Value', 'Location'])
 
     # append lri df to main df
+
     df = df.append(df_lri)
+
 
     ###################################################################################################################
     ###################################################################################################################
