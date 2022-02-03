@@ -44,37 +44,6 @@ def main():
     # create column reflecting concentrations without this generator
     gen_conc['C_i'] = gen_conc['C_star_i'] - gen_conc['delta_C_i']
 
-    # round C_i concentrations to the same levels as in the rr curves:
-    # 1. if <=1, two decimal places
-    # 2. if <=10, 1 decimal place
-    # 3. if >10, 0 decimal places
-
-    round_2 = gen_conc[gen_conc['C_i'] < 1.001]
-    round_2 = round_2.round({'C_i': 2})
-
-    round_1 = gen_conc[(gen_conc['C_i'] < 10) & (gen_conc['delta_C_i'] >= 1.001)]
-    round_1 = round_1.round({'C_i': 1})
-
-    round_0 = gen_conc[gen_conc['C_i'] >= 10]
-    round_0 = round_0.round({'C_i': 0})
-
-    # recombine
-    gen_conc = round_0.append(round_1).append(round_2)
-
-    # similarly round the C_star_i values (both will be mapped to rr data)
-
-    round_2 = gen_conc[gen_conc['C_star_i'] < 1.001]
-    round_2 = round_2.round({'C_star_i': 2})
-
-    round_1 = gen_conc[(gen_conc['C_star_i'] < 10) & (gen_conc['C_star_i'] >= 1.001)]
-    round_1 = round_1.round({'C_star_i': 1})
-
-    round_0 = gen_conc[gen_conc['C_star_i'] >= 10]
-    round_0 = round_0.round({'C_star_i': 0})
-
-    # recombine
-    gen_conc = round_0.append(round_1).append(round_2)
-
     # export as csv for use in subsequent scripts
     gen_conc.to_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/mundra_conc.csv',
               index=False)
