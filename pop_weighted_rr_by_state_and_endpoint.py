@@ -1,0 +1,27 @@
+# Goal: Take as input test_generator_concentrations_and_rr. Produce as output a dataset containing the average
+# 'population-weighted relative risk for end point j within region k' (per Apte et al. 2015).
+
+import pandas as pd
+
+def main():
+
+    df = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/test_join.csv',
+                       index_col=False)
+
+
+    df['pop_times_rr_C_i'] = df['P_i'] * df['mean_rr_C_i']
+
+    df = df.groupby(['state_code',
+                     'state',
+                     'endpoint'], as_index=False).agg({'pop_times_rr_C_i': 'sum',
+                                                       'P_i' : 'sum'})
+
+    df['rr_bar_j_k'] = df['pop_times_rr_C_i']/df['P_i']
+
+    # export as csv for use in later scripts
+    df.to_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/pop_weighted_rr_by_state_and_endpoint.csv',
+                index=False)
+
+
+
+main()
