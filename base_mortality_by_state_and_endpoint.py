@@ -113,7 +113,7 @@ def main():
     df_res_copd['state_code'] = pop_all_ages['state_code']
     df_res_copd['state'] = pop_all_ages['state']
     df_res_copd['total_population'] = pop_all_ages['pop']
-    df_res_copd['endpoint'] = 'res_copd'
+    df_res_copd['endpoint'] = 'resp_copd'
 
     # join in the copd data to get copd baseline mortality rates
     df_res_copd = pd.merge(df_res_copd, res_copd[['Location', 'Value']], how="left", left_on="state",
