@@ -4,7 +4,7 @@
 # make it easier to process the two files in subsequent scripts by reducing the size of the shapefiles.
 
 import geopandas
-from shapely.geometry import Polygon
+
 
 def main():
 
@@ -15,7 +15,7 @@ def main():
     print(hammer.head())
 
     # import the india states shapefile (POLYGON geometry)
-    states = geopandas.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/output/2011_states.shp")
+    states = geopandas.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
 
     print("States imported")
     print(states.head())
