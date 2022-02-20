@@ -8,8 +8,6 @@ def main():
     hammer_aggregated = geopandas.read_file(
         "/Users/kiratsingh/Desktop/research/india_coal/health/output/intermediate/hammer_aggregated.shp")
 
-    print(hammer_aggregated.shape[0])
-
     states = geopandas.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
 
     states = states[['geometry', 'STATE_ID', 'NAME']]
@@ -27,13 +25,11 @@ def main():
 
     hammer_aggregated_with_states = hammer_aggregated_with_states.dissolve(by='WKT', aggfunc='max')
 
-    print(hammer_aggregated_with_states.shape[0])
+    hammer_aggregated_with_states = hammer_aggregated_with_states[['geometry', 'PM2_5', 'STATE_ID', 'NAME', 'area']]
 
     # export dataset as a shapefile
     hammer_aggregated_with_states.to_file(
         "/Users/kiratsingh/Desktop/research/india_coal/health/output/intermediate/hammer_aggregated_with_states.shp")
-
-
 
 
 
