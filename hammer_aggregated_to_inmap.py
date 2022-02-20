@@ -11,8 +11,6 @@ def main():
     # import the clipped InMAP file
     inmap = geopandas.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/output/intermediate/inmap_grid_clipped.shp")
 
-    print(len(inmap.geometry))
-
     # to get the aggregated dataset we want, we need to follow a two-step process
     # in the first step, we implement a spatial join, joining all points from hammer onto the inmap grid cells that
     # they intersect with. we then aggregate the resulting dataset, capturing the mean hammer value per grid cell.
@@ -55,11 +53,7 @@ def main():
 
     # combine the two subsets
     agg_pm25 = inmap_with_hammer[inmap_with_hammer['PM2_5'].notnull()]
-    print(len(agg_pm25['PM2_5']))
-    print(len(nearest_pm25['PM2_5']))
     inmap_with_hammer = agg_pm25.append(nearest_pm25)
-    print(len(inmap_with_hammer['PM2_5']))
-
 
     # export dataset as shapefile
     inmap_with_hammer.to_file("/Users/kiratsingh/Desktop/research/india_coal/health/output/intermediate/hammer_aggregated.shp")
