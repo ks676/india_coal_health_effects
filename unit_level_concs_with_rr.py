@@ -14,7 +14,7 @@ def main():
     directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/shapefiles"
 
     # assign output directory
-    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv"
+    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/concs_with_rr"
 
     # open rr_by_state_and_endpoint dataset
     rr = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/rr_by_state_and_endpoint.csv',
