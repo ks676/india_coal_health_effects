@@ -20,7 +20,7 @@ def main():
     directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/unit_level"
 
     # assign output directory
-    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level"
+    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/shapefiles"
 
     for filename in os.listdir(directory):
         filepath = os.path.join(directory, filename)
