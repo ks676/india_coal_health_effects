@@ -20,14 +20,14 @@ def main():
     rr = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/rr_by_state_and_endpoint.csv',
                      index_col=False)
 
-    # here the only rounding we need to do is to int for values >= 10
-    round_none = rr[rr['conc'] < 10]
+    # here the only rounding we need to do is to for values >= 10
+    #round_none = rr[rr['conc'] < 10]
 
-    round_0 = rr[rr['conc'] >= 10]
-    round_0 = round_0.round({'conc': 0})
+    #round_0 = rr[rr['conc'] >= 10]
+    #round_0 = round_0.round({'conc': 0})
 
     # recombine
-    rr = pd.concat([round_0, round_none], ignore_index=True)
+    #rr = pd.concat([round_0, round_none], ignore_index=True)
 
     # convert conc to string
     rr['conc'] = rr['conc'].astype(str)
@@ -49,21 +49,18 @@ def main():
 
             # round C_i concentrations to the same levels as in the rr curves:
             # 1. if <=1, two decimal places
-            # 2. if <=10, 1 decimal place
-            # 3. if >10, 0 decimal places
-            # 4. if > 100, nearest tens
-            # 5. if > 1000, nearest hundreds
+            # 2. if <=200, 1 decimal place
+            # 3. if >200, nearest tens
+            # 4. if >1000, nearest hundreds
+
 
             round_2 = conc[conc['C_i'] < 1.001]
             round_2 = round_2.round({'C_i': 2})
 
-            round_1 = conc[(conc['C_i'] < 10) & (conc['C_i'] >= 1.001)]
+            round_1 = conc[(conc['C_i'] < 200) & (conc['C_i'] >= 1.001)]
             round_1 = round_1.round({'C_i': 1})
 
-            round_0 = conc[(conc['C_i'] < 100) & (conc['C_i'] >= 10)]
-            round_0 = round_0.round({'C_i': 0})
-
-            round_tens = conc[(conc['C_i'] < 1000) & (conc['C_i'] >= 100)]
+            round_tens = conc[(conc['C_i'] < 1000) & (conc['C_i'] >= 200)]
             round_tens['C_i'] = round_tens['C_i'] * 0.1
             round_tens = round_tens.round({'C_i': 0})
             round_tens['C_i'] = round_tens['C_i'] * 10
@@ -74,20 +71,17 @@ def main():
             round_hundreds['C_i'] = round_hundreds['C_i'] * 100
 
             # recombine
-            conc = pd.concat([round_0, round_1, round_2, round_tens, round_hundreds], ignore_index=True)
+            conc = pd.concat([round_1, round_2, round_tens, round_hundreds], ignore_index=True)
 
             # similarly round the C_star_i values (both will be mapped to rr data)
 
             round_2 = conc[conc['C_star_i'] < 1.001]
             round_2 = round_2.round({'C_star_i': 2})
 
-            round_1 = conc[(conc['C_star_i'] < 10) & (conc['C_star_i'] >= 1.001)]
+            round_1 = conc[(conc['C_star_i'] < 200) & (conc['C_star_i'] >= 1.001)]
             round_1 = round_1.round({'C_star_i': 1})
 
-            round_0 = conc[(conc['C_star_i'] < 100) & (conc['C_star_i'] >= 10)]
-            round_0 = round_0.round({'C_star_i': 0})
-
-            round_tens = conc[(conc['C_star_i'] < 1000) & (conc['C_star_i'] >= 100)]
+            round_tens = conc[(conc['C_star_i'] < 1000) & (conc['C_star_i'] >= 200)]
             round_tens['C_star_i'] = round_tens['C_star_i'] * 0.1
             round_tens = round_tens.round({'C_star_i': 0})
             round_tens['C_star_i'] = round_tens['C_star_i'] * 10
@@ -98,7 +92,7 @@ def main():
             round_hundreds['C_star_i'] = round_hundreds['C_star_i'] * 100
 
             # recombine
-            conc = pd.concat([round_0, round_1, round_2, round_tens, round_hundreds], ignore_index=True)
+            conc = pd.concat([round_1, round_2, round_tens, round_hundreds], ignore_index=True)
 
             # convert conc columns to string
             conc['C_star_i'] = conc['C_star_i'].astype(str)

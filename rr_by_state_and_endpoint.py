@@ -65,7 +65,7 @@ def main():
     ###################################################################################################################
 
     # create df from csv lri rr
-    lri = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/lri.csv')
+    lri = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/interpolated/lri.csv')
 
     # change column names to reflect the names we want in the final dataset
     lri = lri.rename(columns={"label": "endpoint",
@@ -87,7 +87,7 @@ def main():
     ###################################################################################################################
 
     # create df from csv containing lung cancer rr
-    neo_lung = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/neo_lung.csv')
+    neo_lung = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/interpolated/neo_lung.csv')
 
     # change column names to reflect the names we want in the final dataset
     neo_lung = neo_lung.rename(columns={"label": "endpoint",
@@ -109,7 +109,7 @@ def main():
     ###################################################################################################################
 
     # create df from csv containing copd rr
-    res_copd = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/resp_copd.csv')
+    res_copd = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/interpolated/resp_copd.csv')
 
     # change column names to reflect the names we want in the final dataset
     res_copd = res_copd.rename(columns={"label": "endpoint",
@@ -131,7 +131,7 @@ def main():
     ###################################################################################################################
 
     # create df from csv containing t2_dm rr
-    t2_dm = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/t2_dm.csv')
+    t2_dm = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/interpolated/t2_dm.csv')
 
     # change column names to reflect the names we want in the final dataset
     t2_dm = t2_dm.rename(columns={"label": "endpoint",
@@ -191,7 +191,7 @@ def main():
     # loop through the dictionary containing the rr curves
 
     # assign directory
-    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/cvd_ihd"
+    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/interpolated/cvd_ihd"
 
     # iterate over files in directory
     for filename in os.listdir(directory):
@@ -279,7 +279,7 @@ def main():
     # loop through the dictionary containing the rr curves
 
     # assign directory
-    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/cvd_stroke"
+    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/risk_curves/interpolated/cvd_stroke"
 
     # iterate over files in directory
     for filename in os.listdir(directory):
