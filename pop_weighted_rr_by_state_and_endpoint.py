@@ -9,7 +9,7 @@ def main():
                        index_col=False)
 
 
-    df['pop_times_rr_C_i'] = df['P_i'] * df['mean_rr_C_i']
+    df['pop_times_rr_C_i'] = df['P_i'] * df['mean_rr_C_star_i']
 
     df = df.groupby(['state_code',
                      'state',
