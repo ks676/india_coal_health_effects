@@ -1,4 +1,4 @@
-# Goal: This script iterates through the folder containing unit-level outputs from InMAP. For every unit, it combines
+# Goal: This script iterates through the folder containing fleet-level outputs from InMAP. For every output, it combines
 # the inmap output with the hammer_aggregated_to_inmap_with_states shapefile and produces a shapefile containing all
 # the concentration columns - appropriately named - necessary for the premature mortality calculation.
 
@@ -17,10 +17,10 @@ def main():
     print("states loaded")
 
     # assign input directory
-    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/unit_level"
+    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/fleet_level/concentrations"
 
     # assign output directory
-    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/shapefiles"
+    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/fleet_level/shapefiles"
 
     for filename in os.listdir(directory):
         filepath = os.path.join(directory, filename)

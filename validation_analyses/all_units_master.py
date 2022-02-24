@@ -12,10 +12,10 @@ PER_100k = 1/100000
 def main():
 
     # assign directory containing inputs
-    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/concs_with_rr"
+    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/fleet_level/csv/concs_with_rr"
 
     # assign output directory
-    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/master"
+    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/fleet_level/csv/master"
 
     # load the datasets that will be merged with each of the unit-level concentration files
     baseline_mortality = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/base_mortality_by_state_and_endpoint.csv',
@@ -29,10 +29,8 @@ def main():
         split = filename.split('.')
         unit = split[0]
 
-        print(filepath)
-
         # load csv
-        conc = pd.read_csv(filepath, index_col=False)
+        conc = pd.read_csv(filepath)
 
         # bring in state and endpoint specific baseline mortality
         conc = pd.merge(conc, baseline_mortality[["baseline_mortality_rate",

@@ -11,10 +11,10 @@ import geopandas
 def main():
 
     # assign directory containing inputs
-    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/shapefiles"
+    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/fleet_level/shapefiles"
 
     # assign output directory
-    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/concs_with_rr"
+    output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/fleet_level/csv/concs_with_rr"
 
     # open rr_by_state_and_endpoint dataset
     rr = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/rr_by_state_and_endpoint.csv',
@@ -137,7 +137,7 @@ def main():
             path_save = output_directory + "/" + unit + ".csv"
 
             # export as csv for use in later scripts
-            conc.to_csv(path_save, index=False, encoding='utf-8-sig')
+            conc.to_csv(path_save,index=False)
             print(unit + " exported")
 
 

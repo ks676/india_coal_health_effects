@@ -9,8 +9,6 @@ import os
 
 def main():
 
-    print("hello world")
-
     # initialise dataframes to capture fleet-wide totals
     fleet_mortality_by_unit = pd.DataFrame()
     fleet_mortality_by_endpoint = pd.DataFrame()

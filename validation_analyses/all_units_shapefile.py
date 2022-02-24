@@ -6,7 +6,7 @@ import geopandas
 
 def main():
 
-    directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/inmap_inputs"
+    directory = "/Users/kiratsingh/Documents/india_thermal_ts/output/shapefiles"
     output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/input/fleet_level"
 
     i = 0
@@ -35,7 +35,7 @@ def main():
             i+=1
 
             # save as shapefile
-            path_save = output_directory + "/" + "all_units.shp"
+            path_save = output_directory + "/" + "all_units_2019.shp"
             all_emissions.to_file(path_save)
             print(unit + " exported")
 
