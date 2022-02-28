@@ -23,20 +23,18 @@ def main():
     unit_mortality = unit_mortality[unit_mortality['unit'] != 'MUNDRA_UMTPP']
 
     # create join keys
-    unit_mortality['unit_num'] = unit_mortality['unit'].str.slice(start=-1)
-    unit_mortality['unit'] = unit_mortality['unit'].str.slice_replace(-2, repl='')
-    unit_mortality['unit'] = unit_mortality['unit'].str.replace('_', ' ')
-    unit_mortality = unit_mortality.rename(columns={"unit": "plant",
-                                                    "unit_num": "unit"})
-    unit_mortality['unit'] = unit_mortality['unit'].astype(str)
-
+    unit_meta['plant'] = unit_meta['plant'].str.replace(' ','_')
+    unit_meta['unit'] = unit_meta['plant'] + "_" + unit_meta['unit']
 
 
     # merge the two tables
     unit = pd.merge(unit_mortality, unit_meta,
                     how="left",
-                    left_on=["plant", "unit"],
-                    right_on=["plant", "unit"])
+                    left_on=["unit"],
+                    right_on=["unit"])
+
+    # save merged table as csv
+    unit.to_csv("/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/unit_mortality_and_ef.csv", index=False)
 
     ###################################################################################################################
     #################################################### Plots ########################################################
@@ -52,10 +50,6 @@ def main():
     plt.xlabel("Total Generation in 2019 (GWh)")
     plt.ylabel("Attributable Premature Mortality in 2019 (Deaths)")
 
-    #z = np.polyfit(x, y, 1)
-    #p = np.poly1d(z)
-    #plt.plot(x, p(x))
-
     plt.show()
 
     # Annual Attributable Mortality vs. Annual CO2 emissions
@@ -66,10 +60,6 @@ def main():
     ax.scatter(x, y)
     plt.xlabel("Estimated CO2 emissions in 2019 ('000 tonnes)")
     plt.ylabel("Attributable Premature Mortality in 2019 (Deaths)")
-
-    # z = np.polyfit(x, y, 1)
-    # p = np.poly1d(z)
-    # plt.plot(x, p(x))
 
     plt.show()
 
@@ -84,11 +74,30 @@ def main():
     plt.ylabel("Health Damages (@VSL = $500,000)")
     plt.title("Per-unit Health vs. Climate Damages, USD millions")
 
-    # z = np.polyfit(x, y, 1)
-    # p = np.poly1d(z)
-    # plt.plot(x, p(x))
+    plt.show()
+
+    # Mortality per GWh (deaths) vs. CO2 per GWh (kgs)
+    x = unit['annual_plant_CO2_kg']/(unit['annual_unit_gen_GWh']*1000)
+    y = unit['sum_delta_M_ij']/unit['annual_unit_gen_GWh']
+
+    fig, ax = plt.subplots()
+    ax.scatter(x, y)
+    plt.xlabel("Estimated CO2 per GWh (tonnes)")
+    plt.ylabel("Attributable Deaths per GWh (deaths)")
+
+    plt.annotate('Kakatiya Unit 2', (795,0.035))
+    plt.annotate('Rajpura Units 1-2', (790, 0.053))
+    plt.annotate('Mundra Units 1-5', (865, 0.079))
+    plt.annotate('Rihand Units 3,5,6', (940, 0.034))
+    plt.annotate('Rihand Unit 1', (880, 0.032))
+    plt.annotate('Sipat Unit 5', (950, 0.048))
+
+
 
     plt.show()
+
+
+
 
 
 main()
