@@ -32,6 +32,9 @@ def main():
     # convert conc to string
     rr['conc'] = rr['conc'].astype(str)
 
+    # setup counter to track
+    i = 1
+
     for filename in os.listdir(directory):
         filepath = os.path.join(directory, filename)
         split = filename.split('.')
@@ -40,7 +43,9 @@ def main():
 
         # if the ext is .shp, it's a shapefile and we want to open and process it
         if ext == "shp":
-
+            print(unit)
+            print(i)
+            i += 1
             # load shapefile
             unit_conc = geopandas.read_file(filepath)
 

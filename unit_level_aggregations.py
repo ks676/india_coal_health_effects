@@ -78,21 +78,25 @@ def main():
 
     # create filepath for by-endpoint fleet-wide csv
     path_endpoint = output_dir_fleet + "/" + "by_unit_and_endpoint.csv"
+    if "by_unit_and_endpoint.csv" in os.listdir(output_dir_fleet):
+        fleet_mortality_by_endpoint.to_csv(path_endpoint, mode='a', index=False, header=False)
+    else:
+        fleet_mortality_by_endpoint.to_csv(path_endpoint, index=False)
 
-    # export as csv
-    fleet_mortality_by_endpoint.to_csv(path_endpoint, index=False)
 
     # create filepath for by-state fleet-wide csv
     path_state = output_dir_fleet + "/" + "by_unit_and_state.csv"
-
-    # export as csv
-    fleet_mortality_by_state.to_csv(path_state, index=False)
+    if "by_unit_and_state.csv" in os.listdir(output_dir_fleet):
+        fleet_mortality_by_state.to_csv(path_state, mode='a', index=False, header=False)
+    else:
+        fleet_mortality_by_state.to_csv(path_state, index=False)
 
     # create filepath for fleet-wide by-unit mortality csv
     path_unit = output_dir_fleet + "/" + "by_unit.csv"
-
-    # export as csv
-    fleet_mortality_by_unit.to_csv(path_unit, index=False)
+    if "by_unit.csv" in os.listdir(output_dir_fleet):
+        fleet_mortality_by_unit.to_csv(path_unit, mode='a', index=False, header=False)
+    else:
+        fleet_mortality_by_unit.to_csv(path_unit, index=False)
 
     print(unit + " exported to fleet tables")
 

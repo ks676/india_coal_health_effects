@@ -24,7 +24,12 @@ def main():
     pop_weighted_rr = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/pop_weighted_rr_by_state_and_endpoint.csv',
         index_col=False)
 
+    # initialise tracker for progress monitoring
+    i=1
+
     for filename in os.listdir(directory):
+        print(i)
+        i+=1
         filepath = os.path.join(directory, filename)
         split = filename.split('.')
         unit = split[0]
@@ -44,15 +49,22 @@ def main():
 
         # bring in state and endpoint-specific pop-weighted rr
         conc = pd.merge(conc, pop_weighted_rr[["rr_bar_j_k",
-                                               "state_code",
+                                               "state",
                                                "endpoint"]],
                         how="left",
-                        left_on=["state_code", "endpoint"],
-                        right_on=["state_code", "endpoint"])
+                        left_on=["state", "endpoint"],
+                        right_on=["state", "endpoint"])
 
         conc["I_hat_j_k"] = (conc["baseline_mortality_rate"] * PER_100k) / conc["rr_bar_j_k"]
 
         conc["Delta_M_i_j"] = conc["P_i"] * conc["I_hat_j_k"] * (conc["mean_rr_C_star_i"] - conc["mean_rr_C_i"])
+
+        # retain only needed columns for space management
+        conc = conc[["geometry",
+                     "state",
+                     "P_i",
+                     "endpoint",
+                     "Delta_M_i_j"]]
 
         # create filepath
         path_save = output_directory + "/" + unit + ".csv"

@@ -5,14 +5,13 @@ import pandas as pd
 
 def main():
 
-    df = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/test_join.csv',
+    df = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/concs_with_rr/mundra_debugging.csv',
                        index_col=False)
 
 
     df['pop_times_rr_C_i'] = df['P_i'] * df['mean_rr_C_star_i']
 
-    df = df.groupby(['state_code',
-                     'state',
+    df = df.groupby(['state',
                      'endpoint'], as_index=False).agg({'pop_times_rr_C_i': 'sum',
                                                        'P_i' : 'sum'})
 

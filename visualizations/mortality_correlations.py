@@ -14,7 +14,7 @@ def main():
 
     # import csv containing unit-level data on annual generation, carbon dioxide emissions and other
     # criteria air pollutant emissions
-    unit_meta = pd.read_csv("/Users/kiratsingh/Documents/india_thermal_ts/output/top_50_thermal_units.csv")
+    unit_meta = pd.read_csv("/Users/kiratsingh/Documents/india_thermal_ts/output/all_thermal_units.csv")
     unit_meta['unit'] = unit_meta['unit'].astype(str)
 
     # import csv containing unit-level mortality aggregates
@@ -74,7 +74,18 @@ def main():
     plt.ylabel("Health Damages (@VSL = $500,000)")
     plt.title("Per-unit Health vs. Climate Damages, USD millions")
 
+    lims = [
+        np.min([ax.get_xlim(), ax.get_ylim()]),  # min of both axes
+        np.max([ax.get_xlim(), ax.get_ylim()]),  # max of both axes
+        ]
+
+    ax.plot(lims, lims, 'k-', alpha=0.75, zorder=0)
+    ax.set_aspect('equal')
+    ax.set_xlim(lims)
+    ax.set_ylim(lims)
+
     plt.show()
+
 
     # Mortality per GWh (deaths) vs. CO2 per GWh (kgs)
     x = unit['annual_plant_CO2_kg']/(unit['annual_unit_gen_GWh']*1000)
@@ -85,13 +96,28 @@ def main():
     plt.xlabel("Estimated CO2 per GWh (tonnes)")
     plt.ylabel("Attributable Deaths per GWh (deaths)")
 
-    plt.annotate('Kakatiya Unit 2', (795,0.035))
-    plt.annotate('Rajpura Units 1-2', (790, 0.053))
-    plt.annotate('Mundra Units 1-5', (865, 0.079))
-    plt.annotate('Rihand Units 3,5,6', (940, 0.034))
-    plt.annotate('Rihand Unit 1', (880, 0.032))
-    plt.annotate('Sipat Unit 5', (950, 0.048))
+    #plt.annotate('Kakatiya Unit 2', (795,0.035))
+    #plt.annotate('Rajpura Units 1-2', (790, 0.053))
+    #plt.annotate('Mundra Units 1-5', (865, 0.079))
+    #plt.annotate('Rihand Units 3,5,6', (940, 0.034))
+    #plt.annotate('Rihand Unit 1', (880, 0.032))
+    #plt.annotate('Sipat Unit 5', (950, 0.048))
 
+    # Mortality Damages per GWh ($) vs. Climate change damages per GWh ($)
+    x = (unit['annual_plant_CO2_kg'] / (unit['annual_unit_gen_GWh'] * 1000))*(40)
+    y = (unit['sum_delta_M_ij'] / unit['annual_unit_gen_GWh'])*500000
+
+    fig, ax = plt.subplots()
+    ax.scatter(x, y)
+    plt.xlabel("Estimated Climate Damages per GWh (USD)")
+    plt.ylabel("Estimated Mortality Damages per GWh (USD)")
+
+    #plt.annotate('Kakatiya Unit 2', (31500, 17500))
+    #plt.annotate('Rajpura Units 1-2', (31500, 26000))
+    #plt.annotate('Mundra Units 1-5', (34000, 39500))
+    #plt.annotate('Rihand Units 3,5,6', (37500, 17000))
+    #plt.annotate('Rihand Unit 1', (35250, 16000))
+    #plt.annotate('Sipat Unit 5', (38000, 24000))
 
 
     plt.show()
