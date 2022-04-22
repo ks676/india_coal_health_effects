@@ -64,7 +64,9 @@ def main():
                      "state",
                      "P_i",
                      "endpoint",
-                     "Delta_M_i_j"]]
+                     "Delta_M_i_j",
+                     "mean_rr_C_star_i",
+                     "mean_rr_C_i"]]
 
         # create filepath
         path_save = output_directory + "/" + unit + ".csv"
