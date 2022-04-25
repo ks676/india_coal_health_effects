@@ -1,5 +1,5 @@
 # Goal: take as input the unit_mortality_and_ef file and render a map showing bubbles
-# for per-unit mortality
+# for per-unit mortality intensity
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -16,17 +16,20 @@ def main():
     unit_mort.crs = 'epsg:4326'
     unit_mort.geometry = gdf.points_from_xy(unit_mort.longitude, unit_mort.latitude)
     unit_mort["sum_delta_M_ij"] = unit_mort["sum_delta_M_ij"].astype(float)
+    unit_mort["annual_unit_gen_GWh"] = unit_mort["annual_unit_gen_GWh"].astype(float)
+    unit_mort["mort_intensity"] = unit_mort["sum_delta_M_ij"]/unit_mort["annual_unit_gen_GWh"]
+
     # import states shapefile
     states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
 
     india_map = states.plot()
     unit_mort.plot(ax=india_map,
-                   column=unit_mort["sum_delta_M_ij"],
-                   markersize= unit_mort["sum_delta_M_ij"]/5,
+                   column=unit_mort["mort_intensity"],
+                   markersize= unit_mort["mort_intensity"]*30,
                    cmap="inferno_r",
                    legend=True)
 
-    plt.title('Annual Attributable Premature Mortality per Unit (deaths/year)', fontsize=10)
+    plt.title('Premature Mortality Intensity per Unit (deaths/GWh)', fontsize=10)
     plt.xlabel("Longitude (°E)")
     plt.ylabel("Latitude (°N)")
     plt.show()
