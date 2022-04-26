@@ -19,7 +19,7 @@ def main():
 
     states = states.to_crs(4326)
 
-    # import unit mortality and ef file - this contains mortality per source
+    # import unit mortality and ef file - this contains mortality per source unit
     mort_by_unit = pd.read_csv(
         "/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/unit_mortality_and_ef.csv")
 
@@ -50,6 +50,10 @@ def main():
     states.plot(column='sum_delta_M_ij',
                 cmap="inferno_r",
                 legend=True)
+
+    plt.title('Annual Premature Mortality Sourced in State', fontsize=10)
+    plt.xlabel("Longitude (°E)")
+    plt.ylabel("Latitude (°N)")
 
     plt.show()
 

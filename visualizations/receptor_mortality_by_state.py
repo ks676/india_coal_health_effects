@@ -21,29 +21,33 @@ def main():
     # aggregate receptor mortality by state
     mort_by_state = mort_by_state.groupby(['state'], as_index=False).agg({'Delta_M_i_j': 'sum'})
 
-
     # join in mort_by_state onto states to create chloropleth map
     states = pd.merge(states, mort_by_state,
                     how="left",
                     left_on=["NAME"],
                     right_on=["state"])
 
+    states['Delta_M_i_j'] = states['Delta_M_i_j'].fillna(0)
+
     # plot chloropleth
     states.plot(column='Delta_M_i_j',
                 cmap="inferno_r",
                 legend=True)
 
-    plt.title('Annual Premature Mortality Burden by State', fontsize=10)
+    plt.title('Annual Premature Mortality Borne by State', fontsize=10)
     plt.xlabel("Longitude (°E)")
     plt.ylabel("Latitude (°N)")
 
     plt.show()
 
     # rename columns
-    mort_by_state = mort_by_state.rename(columns={"Delta_M_i_j": "receptor_mort"})
+    states = states.rename(columns={"Delta_M_i_j": "receptor_mort"})
+
+    # select cols
+    states = states[["state", "receptor_mort"]]
 
     # export as csv
-    mort_by_state.to_csv(
+    states.to_csv(
         "/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/state_receptor.csv",
         index=False)
 
