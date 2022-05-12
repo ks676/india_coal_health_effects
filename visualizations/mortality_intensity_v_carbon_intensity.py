@@ -36,20 +36,23 @@ def main():
     # create vectors
     mort_med = unit_mort["mort_intensity_median"]
     carbon_med = unit_mort["carbon_intensity_median"]
+    print(mort_med)
+    print(carbon_med)
 
     # scatter plot of mortality intensity against carbon intensity
     plt.scatter(carbon_vec, mort_vec, c="green")
 
     # line overlays for identifying quadrants
-    plt.plot(carbon_med, mort_vec, label = "Median Carbon Intensity")
-    plt.plot(carbon_vec, mort_med, label = "Median Mortality Intensity")
-    plt.legend()
+    plt.plot(carbon_med, mort_vec, label = "Median: 924 tonneCO2/GWh")
+    plt.plot(carbon_vec, mort_med, label = "Median: 0.09 deaths/GWh")
+    plt.legend(loc='upper right')
 
     # titles
-    plt.title("Unit-level Mortality Intensity vs. Carbon Intensity")
+    #plt.title("Mortality Intensity vs. Carbon Intensity")
     plt.xlabel("Carbon Intensity (tonneCO2/GWh)")
     plt.ylabel("Mortality Intensity (annual deaths/GWh)")
-
+    plt.savefig("/Users/kiratsingh/Documents/coal_health_effects/visualizations/plots/mort_intensity_v_carbon_intensity.png",
+                dpi=2400)
     plt.show()
 
 main()

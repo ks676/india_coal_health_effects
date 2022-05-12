@@ -22,16 +22,26 @@ def main():
     # remove mundra_umtpp rows because it is at a different scale (plant level rather than unit level)
     unit_mortality = unit_mortality[unit_mortality['unit'] != 'MUNDRA_UMTPP']
 
+    # import csv containing capacities
+    unit_capacity = pd.read_csv('/Users/kiratsingh/Documents/india_thermal_ts/output/all_thermal_units_metadata.csv')
+    unit_capacity = unit_capacity[["unit", "unit_capacity", "unit_commissioning_year"]]
     # create join keys
     unit_meta['plant'] = unit_meta['plant'].str.replace(' ','_')
     unit_meta['unit'] = unit_meta['plant'] + "_" + unit_meta['unit']
 
 
-    # merge the two tables
+    # merge unit mortality and unit meta
     unit = pd.merge(unit_mortality, unit_meta,
                     how="left",
                     left_on=["unit"],
                     right_on=["unit"])
+
+    # merge in capacity
+    unit = pd.merge(unit, unit_capacity,
+                    how="left",
+                    left_on=["unit"],
+                    right_on=["unit"])
+
 
     # save merged table as csv
     unit.to_csv("/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/unit_mortality_and_ef.csv", index=False)
