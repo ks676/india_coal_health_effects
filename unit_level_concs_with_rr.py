@@ -20,15 +20,6 @@ def main():
     rr = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/rr_by_state_and_endpoint.csv',
                      index_col=False)
 
-    # here the only rounding we need to do is to for values >= 10
-    #round_none = rr[rr['conc'] < 10]
-
-    #round_0 = rr[rr['conc'] >= 10]
-    #round_0 = round_0.round({'conc': 0})
-
-    # recombine
-    #rr = pd.concat([round_0, round_none], ignore_index=True)
-
     # convert conc to string
     rr['conc'] = rr['conc'].astype(str)
 
@@ -105,19 +96,25 @@ def main():
 
             # join on state id and C_i
             conc = pd.merge(conc, rr[['endpoint',
+                                      "min_rr",
                                       'mean_rr',
+                                      "max_rr",
                                       "state_code",
                                       "conc"]],
                             how="left",
                             left_on=["state_code", "C_i"],
                             right_on=["state_code", "conc"])
             # rename mean_rr
-            conc = conc.rename(columns={"mean_rr": "mean_rr_C_i",
+            conc = conc.rename(columns={"min_rr": "min_rr_C_i",
+                                        "mean_rr": "mean_rr_C_i",
+                                        "max_rr": "max_rr_C_i",
                                         "endpoint": "endpoint_left"})
 
             # join on state id and C_i
             conc = pd.merge(conc, rr[['endpoint',
+                                      "min_rr",
                                       'mean_rr',
+                                      "max_rr",
                                       "state_code",
                                       "conc"]],
                             how="left",
@@ -125,7 +122,10 @@ def main():
                             right_on=["state_code", "conc", "endpoint"])
 
             # rename mean_rr
-            conc = conc.rename(columns={"mean_rr": "mean_rr_C_star_i"})
+            conc = conc.rename(columns={"min_rr": "min_rr_C_star_i",
+                                        "mean_rr": "mean_rr_C_star_i",
+                                        "max_rr": "max_rr_C_star_i"
+                                        })
 
             # drop extra columns
             conc = conc.drop(columns=['endpoint_left',

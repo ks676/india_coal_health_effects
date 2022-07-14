@@ -48,23 +48,35 @@ def main():
                         right_on=["state_code", "endpoint"])
 
         # bring in state and endpoint-specific pop-weighted rr
-        conc = pd.merge(conc, pop_weighted_rr[["rr_bar_j_k",
+        conc = pd.merge(conc, pop_weighted_rr[["mean_rr_bar_j_k",
+                                               "min_rr_bar_j_k",
+                                               "max_rr_bar_j_k",
                                                "state",
                                                "endpoint"]],
                         how="left",
                         left_on=["state", "endpoint"],
                         right_on=["state", "endpoint"])
 
-        conc["I_hat_j_k"] = (conc["baseline_mortality_rate"] * PER_100k) / conc["rr_bar_j_k"]
+        conc["mean_I_hat_j_k"] = (conc["baseline_mortality_rate"] * PER_100k) / conc["mean_rr_bar_j_k"]
+        conc["min_I_hat_j_k"] = (conc["baseline_mortality_rate"] * PER_100k) / conc["min_rr_bar_j_k"]
+        conc["max_I_hat_j_k"] = (conc["baseline_mortality_rate"] * PER_100k) / conc["max_rr_bar_j_k"]
 
-        conc["Delta_M_i_j"] = conc["P_i"] * conc["I_hat_j_k"] * (conc["mean_rr_C_star_i"] - conc["mean_rr_C_i"])
+        # Need to create mean, min, max I_hat parameters
+
+        conc["mean_Delta_M_i_j"] = conc["P_i"] * conc["mean_I_hat_j_k"] * (conc["mean_rr_C_star_i"] - conc["mean_rr_C_i"])
+
+        conc["min_Delta_M_i_j"] = conc["P_i"] * conc["min_I_hat_j_k"] * (conc["min_rr_C_star_i"] - conc["min_rr_C_i"])
+
+        conc["max_Delta_M_i_j"] = conc["P_i"] * conc["max_I_hat_j_k"] * (conc["max_rr_C_star_i"] - conc["max_rr_C_i"])
 
         # retain only needed columns for space management
         conc = conc[["geometry",
                      "state",
                      "P_i",
                      "endpoint",
-                     "Delta_M_i_j",
+                     "mean_Delta_M_i_j",
+                     "min_Delta_M_i_j",
+                     "max_Delta_M_i_j",
                      "mean_rr_C_star_i",
                      "mean_rr_C_i"]]
 

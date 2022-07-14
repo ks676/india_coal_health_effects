@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 
+SCC = 50
+VSL = 161000
+
 def main():
 
     # import csv containing unit-level data on annual generation, carbon dioxide emissions and other
@@ -106,29 +109,30 @@ def main():
     plt.xlabel("Estimated CO2 per GWh (tonnes)")
     plt.ylabel("Attributable Deaths per GWh (deaths)")
 
-    #plt.annotate('Kakatiya Unit 2', (795,0.035))
-    #plt.annotate('Rajpura Units 1-2', (790, 0.053))
-    #plt.annotate('Mundra Units 1-5', (865, 0.079))
-    #plt.annotate('Rihand Units 3,5,6', (940, 0.034))
-    #plt.annotate('Rihand Unit 1', (880, 0.032))
-    #plt.annotate('Sipat Unit 5', (950, 0.048))
-
     # Mortality Damages per GWh ($) vs. Climate change damages per GWh ($)
-    x = (unit['annual_plant_CO2_kg'] / (unit['annual_unit_gen_GWh'] * 1000))*(40)
-    y = (unit['sum_delta_M_ij'] / unit['annual_unit_gen_GWh'])*500000
+    x = ((unit['annual_plant_CO2_kg'] / (unit['annual_unit_gen_GWh'] * 1000))*(SCC))/1000
+    y = ((unit['sum_delta_M_ij'] / unit['annual_unit_gen_GWh'])*VSL)/1000
+
+    # get median damages for plotting overlays
+    median_mort_damage = y.median()
+    print(median_mort_damage)
+    median_co2_damage = x.median()
+    print(median_co2_damage)
+    # create vectors for plotting
+    mort_vector = np.full((len(x),1),median_mort_damage)
+    co2_vector = np.full((len(x),1),median_co2_damage)
+
 
     fig, ax = plt.subplots()
-    ax.scatter(x, y)
-    plt.xlabel("Estimated Climate Damages per GWh (USD)")
-    plt.ylabel("Estimated Mortality Damages per GWh (USD)")
+    ax.scatter(x, y, c="green")
+    plt.xlabel("Estimated Climate Damages per GWh (US$ '000)")
+    plt.ylabel("Estimated Mortality Damages per GWh (US$ '000)")
+    plt.plot(x, mort_vector, label="Median Health Damages: $14k/GWh")
+    plt.plot(co2_vector, y, label="Median Climate Damages: $46k/GWh")
+    plt.legend(loc='upper right')
 
-    #plt.annotate('Kakatiya Unit 2', (31500, 17500))
-    #plt.annotate('Rajpura Units 1-2', (31500, 26000))
-    #plt.annotate('Mundra Units 1-5', (34000, 39500))
-    #plt.annotate('Rihand Units 3,5,6', (37500, 17000))
-    #plt.annotate('Rihand Unit 1', (35250, 16000))
-    #plt.annotate('Sipat Unit 5', (38000, 24000))
-
+    plt.savefig("/Users/kiratsingh/Documents/coal_health_effects/visualizations/plots/mort_damages_v_carbon_damages.png",
+                dpi=2400)
 
     plt.show()
 

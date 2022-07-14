@@ -22,16 +22,23 @@ def main():
     output_dir_endpoint = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/aggregations/endpoint"
     output_dir_fleet = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/aggregations/fleet"
 
+    i = 0
     for filename in os.listdir(directory):
+        i+=1
+        print(i)
         filepath = os.path.join(directory, filename)
         split = filename.split('.')
+        print(split[0])
         unit = split[0]
+        print(unit)
 
         # load csv
         conc = pd.read_csv(filepath)
 
         # aggregate unit-attributable mortality by endpoint
-        mortality_by_endpoint = conc.groupby(['endpoint'], as_index=False).agg({'Delta_M_i_j': 'sum'})
+        mortality_by_endpoint = conc.groupby(['endpoint'], as_index=False).agg({'mean_Delta_M_i_j': 'sum',
+                                                                                'min_Delta_M_i_j': 'sum',
+                                                                                'max_Delta_M_i_j': 'sum'})
 
         # create filepath for endpoint csv
         path_save = output_dir_endpoint + "/" + unit + ".csv"
@@ -47,7 +54,9 @@ def main():
         fleet_mortality_by_endpoint = pd.concat([fleet_mortality_by_endpoint, mortality_by_endpoint], ignore_index=True)
 
         # aggregate unit-attributable mortality by state
-        mortality_by_state = conc.groupby(['state'], as_index=False).agg({'Delta_M_i_j': 'sum'})
+        mortality_by_state = conc.groupby(['state'], as_index=False).agg({'mean_Delta_M_i_j': 'sum',
+                                                                          'min_Delta_M_i_j': 'sum',
+                                                                          'max_Delta_M_i_j': 'sum'})
 
         # create filepath for state csv
         path_save = output_dir_state + "/" + unit + ".csv"
@@ -59,15 +68,18 @@ def main():
         # add col for unit
         mortality_by_state['unit'] = unit
 
-        # append to fleet-wide by-endpoint df
+        # append to fleet-wide by-state df
         fleet_mortality_by_state = pd.concat([fleet_mortality_by_state, mortality_by_state], ignore_index=True)
 
         # calculate total mortality attributable to unit
-        unit_mortality = sum(conc['Delta_M_i_j'])
+        mean_unit_mortality = sum(conc['mean_Delta_M_i_j'])
+        min_unit_mortality = sum(conc['min_Delta_M_i_j'])
+        max_unit_mortality = sum(conc['max_Delta_M_i_j'])
 
         # create total mortality row to append to fleet-wide unit-level mortality df
-        data = [[unit, unit_mortality]]
-        unit_mortality_df = pd.DataFrame(data, columns = ['unit', 'sum_delta_M_ij'])
+        data = [[unit, mean_unit_mortality, min_unit_mortality, max_unit_mortality]]
+        unit_mortality_df = pd.DataFrame(data, columns = ['unit', 'sum_mean_delta_M_ij',
+                                                          'sum_min_delta_M_ij', 'sum_max_delta_M_ij'])
 
         # concatenate with fleet_wide mortality df
         fleet_mortality_by_unit = pd.concat([fleet_mortality_by_unit, unit_mortality_df], ignore_index=True)
@@ -98,7 +110,7 @@ def main():
     else:
         fleet_mortality_by_unit.to_csv(path_unit, index=False)
 
-    print(unit + " exported to fleet tables")
+    #print(unit + " exported to fleet tables")
 
 
 main()

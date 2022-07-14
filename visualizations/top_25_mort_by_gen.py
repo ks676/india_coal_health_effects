@@ -28,11 +28,13 @@ def main():
                    cmap="inferno_r",
                    legend=True)
 
-    plt.title('Annual Attributable Premature Mortality per Unit (deaths/year)', fontsize=10)
-    plt.xlabel("Longitude (°E)")
-    plt.ylabel("Latitude (°N)")
+    #plt.title('Annual Attributable Premature Mortality per Unit (deaths/year)', fontsize=10)
+    #plt.xlabel("Longitude (°E)")
+    #plt.ylabel("Latitude (°N)")
+    plt.xticks([])
+    plt.yticks([])
     plt.savefig("/Users/kiratsingh/Documents/coal_health_effects/visualizations/plots/top_25_mort_by_gen.png",
-                dpi=2400)
+                dpi=300)
 
     plt.show()
 

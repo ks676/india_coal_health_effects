@@ -301,8 +301,10 @@ def main():
                                      'endpoint',
                                      'age_lower',
                                      'age_weight']]
+
         # create key column in file for merge
         file['age_lower'] = file_age
+
         # with file_weights on the left, we merge in file from the right on age_lower
         file_weights = pd.merge(file_weights, file[['age_lower',
                                                     'conc',
@@ -312,11 +314,13 @@ def main():
                                 how="left",
                                 left_on="age_lower",
                                 right_on="age_lower")
+
         # rename rr columns as needed
         file_weights = file_weights.rename(columns={"mean": "mean_rr",
                                                     "min": "min_rr",
                                                     "max": "max_rr",
                                                     "age_lower_x": "age_lower"})
+
         # reorder columns to make sure they reflect the column order of df_ihd
         file_weights = file_weights[['state_code',
                                      'state',
