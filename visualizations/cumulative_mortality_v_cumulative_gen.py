@@ -11,18 +11,6 @@ def main():
     unit_mort = pd.read_csv("/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/unit_mortality_and_ef.csv")
 
     print(len(unit_mort))
-    # filter units that were retired in 2020-21
-    unit_mort = unit_mort[~unit_mort['unit'].isin(['PANIPAT_TPS_5',
-                                                   'NEYVELI_TPS-_I_1',
-                                                   'NEYVELI_TPS-_I_2',
-                                                   'NEYVELI_TPS-_I_3',
-                                                   'NEYVELI_TPS-_I_4',
-                                                   'NEYVELI_TPS-_I_5',
-                                                   'NEYVELI_TPS-_I_6',
-                                                   'NEYVELI_TPS-_I_8',
-                                                   'NEYVELI_TPS-_I_9',
-                                                   'BOKARO_`B`_TPS_3'])]
-    print(len(unit_mort))
 
     # create col to reflect mortality intensity
     unit_mort["sum_mean_delta_M_ij"] = unit_mort["sum_mean_delta_M_ij"].astype(float)

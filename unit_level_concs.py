@@ -23,10 +23,15 @@ def main():
     output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/shapefiles"
 
     for filename in os.listdir(directory):
+        print(filename)
         filepath = os.path.join(directory, filename)
         split = filename.split('.')
-        ext = split[1]
-        unit = split[0]
+        if filename.count('.') > 1:
+            ext = split[2]
+            unit = split[0] + "." + split[1]
+        else:
+            ext = split[1]
+            unit = split[0]
 
         # if the ext is .shp, it's a shapefile and we want to open and process it using geopandas
         if ext == "shp":

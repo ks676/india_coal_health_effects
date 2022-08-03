@@ -29,8 +29,12 @@ def main():
     for filename in os.listdir(directory):
         filepath = os.path.join(directory, filename)
         split = filename.split('.')
-        ext = split[1]
-        unit = split[0]
+        if filename.count('.') > 1:
+            ext = split[2]
+            unit = split[0] + '.' + split[1]
+        else:
+            ext = split[1]
+            unit = split[0]
 
         # if the ext is .shp, it's a shapefile and we want to open and process it
         if ext == "shp":

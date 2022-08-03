@@ -28,8 +28,11 @@ def main():
         print(i)
         filepath = os.path.join(directory, filename)
         split = filename.split('.')
-        print(split[0])
-        unit = split[0]
+        if filename.count('.') > 1:
+            unit = split[0] + '.' + split[1]
+        else:
+            unit = split[0]
+
         print(unit)
 
         # load csv

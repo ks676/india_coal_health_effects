@@ -32,7 +32,10 @@ def main():
         i+=1
         filepath = os.path.join(directory, filename)
         split = filename.split('.')
-        unit = split[0]
+        if filename.count('.') > 1:
+            unit = split[0] + '.' + split[1]
+        else:
+            unit = split[0]
 
         print(filepath)
 
