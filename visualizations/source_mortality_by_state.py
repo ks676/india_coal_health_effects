@@ -13,9 +13,9 @@ import matplotlib
 def main():
 
     # import states shapefile
-    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
+    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/Indian_States.shp")
 
-    states = states[["NAME", "geometry"]]
+    states = states[["st_nm", "geometry"]]
 
     states = states.to_crs(4326)
 
@@ -32,22 +32,22 @@ def main():
     mort_by_unit = mort_by_unit.sjoin(states, how="left", predicate='intersects')
 
     # aggregate source mortality by state
-    mort_by_unit = mort_by_unit.groupby(['NAME'], as_index=False).agg({'sum_delta_M_ij': 'sum'})
+    mort_by_unit = mort_by_unit.groupby(['st_nm'], as_index=False).agg({'sum_mean_delta_M_ij': 'sum'})
 
 
 
     # join back into states file for plotting
     states = pd.merge(states, mort_by_unit,
                       how="left",
-                      left_on=["NAME"],
-                      right_on=["NAME"])
+                      left_on=["st_nm"],
+                      right_on=["st_nm"])
 
-    states['sum_delta_M_ij'] = states['sum_delta_M_ij'].fillna(0)
+    states['sum_mean_delta_M_ij'] = states['sum_mean_delta_M_ij'].fillna(0)
 
 
 
     # plot chloropleth
-    states.plot(column='sum_delta_M_ij',
+    states.plot(column='sum_mean_delta_M_ij',
                 cmap="inferno_r",
                 legend=True)
 
@@ -58,8 +58,8 @@ def main():
     plt.show()
 
     # rename columns
-    states = states.rename(columns={"sum_delta_M_ij": "source_mort",
-                                    "NAME": "state"})
+    states = states.rename(columns={"sum_mean_delta_M_ij": "source_mort",
+                                    "st_nm": "state"})
 
     # select cols
     states = states[["state", "source_mort"]]

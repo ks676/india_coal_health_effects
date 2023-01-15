@@ -243,9 +243,10 @@ def main():
     # iterate through the stroke files:
     # for each file, parse the file name to get the age group that the file contains data for
     # convert the contents of the file to a df with an additional column for age_lower
-    # append that df to the main stroke dataframe so we get one df containing the curves for all age groups
+    # append that df to the main stroke dataframe so we get one df containing the baseline
+    # mortality rate for all age groups
 
-    # initialise df to capture stroke dr curve from all age-specific files
+    # initialise df to capture stroke bmr from all age-specific files
     df_stroke_dr = pd.DataFrame(columns=['state',
                                       'endpoint',
                                       'baseline_mortality_rate',
@@ -306,7 +307,10 @@ def main():
     ###################################################################################################################
 
     # export as csv for use in other scripts
-    df.to_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/base_mortality_by_state_and_endpoint.csv', index=False)
+    df.to_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/base_mortality_by_state_and_endpoint.csv',
+              index=False)
+
+
 
 
 

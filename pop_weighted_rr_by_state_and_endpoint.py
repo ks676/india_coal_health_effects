@@ -5,7 +5,7 @@ import pandas as pd
 
 def main():
 
-    df = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/concs_with_rr/AKALTARA_TPS_4.csv',
+    df = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/concs_with_rr/Dr_N_TATA_RAO_TPS_1.csv',
                        index_col=False)
 
 
@@ -24,7 +24,7 @@ def main():
     df['max_rr_bar_j_k'] = df['pop_times_max_rr_C_i'] / df['P_i']
 
     # export as csv for use in later scripts
-    df.to_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/pop_weighted_rr_by_state_and_endpoint.csv',
+    df.to_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/pop_weighted_rr_by_state_and_endpoint_gbd.csv',
                 index=False)
 
 

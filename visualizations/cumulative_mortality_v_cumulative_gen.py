@@ -12,6 +12,11 @@ def main():
 
     print(len(unit_mort))
 
+    # filter out retired units
+    unit_mort = unit_mort[unit_mort["status"] != "retired"]
+
+    print(len(unit_mort))
+
     # create col to reflect mortality intensity
     unit_mort["sum_mean_delta_M_ij"] = unit_mort["sum_mean_delta_M_ij"].astype(float)
     unit_mort["sum_min_delta_M_ij"] = unit_mort["sum_min_delta_M_ij"].astype(float)
@@ -36,7 +41,7 @@ def main():
 
     # export cumulative totals
     unit_mort.to_csv(
-        "/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/cum_mort_gen.csv",
+        "/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/cum_mort_gen_ex_ret.csv",
         index=False)
 
     # line chart of cumulative mortality against cumulative generation
@@ -44,19 +49,19 @@ def main():
     y = np.array(unit_mort["cum_mort_perc"])
 
     # overlays to highlight cut-offs
-    mort_markers = [25.157, 50.035, 75.133]
-    gen_markers = [4.506, 22.421, 52.373]
+    mort_markers = [25, 50, 75]
+    gen_markers = [4.8, 23.5, 52.6]
 
 
     plt.plot(x,y)
     plt.scatter(gen_markers, mort_markers, c="green")
-    plt.annotate("25.15% of mortality from 4.50% of generation", (7,23))
-    plt.annotate("50.03%, 22.42%%", (25, 47))
-    plt.annotate("75.13%, 52.37%", (55, 72))
-    plt.title("Cumulative Premature Mortality vs. Cumulative Generation")
+    plt.annotate("25% of mortality from 4.8% of generation", (7,23))
+    plt.annotate("50%, 23.5%", (27, 47))
+    plt.annotate("75%, 52.6%", (56, 72))
+    #plt.title("Cumulative Premature Mortality vs. Cumulative Generation")
     plt.xlabel("Cumulative Generation (% of total)")
     plt.ylabel("Cumulative Premature Mortality (% of total)")
-    plt.savefig("/Users/kiratsingh/Documents/coal_health_effects/visualizations/plots/cum_mort_v_cum_gen.png",
+    plt.savefig("/Users/kiratsingh/Documents/coal_health_effects/visualizations/plots/cum_mort_v_cum_gen_ex_ret.png",
                 dpi=300)
 
     plt.show()

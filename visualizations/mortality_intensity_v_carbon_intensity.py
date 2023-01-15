@@ -17,9 +17,9 @@ def main():
         "/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/unit_mortality_and_ef.csv")
 
     # create col to reflect mortality intensity
-    unit_mort["sum_delta_M_ij"] = unit_mort["sum_delta_M_ij"].astype(float)
+    unit_mort["sum_mean_delta_M_ij"] = unit_mort["sum_mean_delta_M_ij"].astype(float)
     unit_mort["annual_unit_gen_GWh"] = unit_mort["annual_unit_gen_GWh"].astype(float)
-    unit_mort["mort_intensity"] = unit_mort["sum_delta_M_ij"] / unit_mort["annual_unit_gen_GWh"]
+    unit_mort["mort_intensity"] = unit_mort["sum_mean_delta_M_ij"] / unit_mort["annual_unit_gen_GWh"]
 
     # create col to reflect carbon intensity
     unit_mort["annual_plant_CO2_kg"] = unit_mort["annual_plant_CO2_kg"].astype(float)
@@ -52,7 +52,7 @@ def main():
     plt.xlabel("Carbon Intensity (tonneCO2/GWh)")
     plt.ylabel("Mortality Intensity (annual deaths/GWh)")
     plt.savefig("/Users/kiratsingh/Documents/coal_health_effects/visualizations/plots/mort_intensity_v_carbon_intensity.png",
-                dpi=2400)
+                dpi=400)
     plt.show()
 
 main()

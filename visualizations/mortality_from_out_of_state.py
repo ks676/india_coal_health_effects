@@ -12,8 +12,8 @@ import matplotlib
 def main():
 
     # import states shapefile
-    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
-    states = states[["NAME", "geometry"]]
+    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/Indian_States.shp")
+    states = states[["st_nm", "geometry"]]
     states = states.to_crs(4326)
 
     # import unit mortality and ef file - this contains mortality per source unit
@@ -32,7 +32,7 @@ def main():
     # spatial join to map each unit based on its lat and lon to a state
     mort_by_unit = mort_by_unit.sjoin(states, how="left", predicate='intersects')
 
-    unit_state = mort_by_unit[["unit", "NAME"]]
+    unit_state = mort_by_unit[["unit", "st_nm"]]
 
     # join in unit_state onto mort_by_unit_state to get source state column
     mort_by_unit_and_state = pd.merge(mort_by_unit_and_state, unit_state,
@@ -41,22 +41,22 @@ def main():
                       right_on=["unit"])
 
     mort_by_unit_and_state = mort_by_unit_and_state.rename(columns={"state": "receptor_state",
-                                    "NAME": "source_state"})
+                                    "st_nm": "source_state"})
 
     mort_by_unit_and_state = mort_by_unit_and_state[
         mort_by_unit_and_state["receptor_state"] != mort_by_unit_and_state["source_state"]]
 
     mort_by_receptor_state = mort_by_unit_and_state.groupby(['receptor_state'],
-                                                            as_index=False).agg({'Delta_M_i_j': 'sum'})
+                                                            as_index=False).agg({'mean_Delta_M_i_j': 'sum'})
 
     states = pd.merge(states, mort_by_receptor_state,
                       how="left",
-                      left_on=["NAME"],
+                      left_on=["st_nm"],
                       right_on=["receptor_state"])
 
-    states = states.rename(columns={'Delta_M_i_j': "mort_from_out_state"})
+    states = states.rename(columns={'mean_Delta_M_i_j': "mort_from_out_state"})
 
-    states = states[["NAME", "mort_from_out_state", "geometry"]]
+    states = states[["st_nm", "mort_from_out_state", "geometry"]]
 
     states['mort_from_out_state'] = states['mort_from_out_state'].fillna(0)
 

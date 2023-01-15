@@ -20,14 +20,16 @@ def main():
     unit_mort["mort_intensity"] = unit_mort["sum_mean_delta_M_ij"]/unit_mort["annual_unit_gen_GWh"]
 
     # import states shapefile
-    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
+    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/Indian_States.shp")
 
     india_map = states.plot()
     unit_mort.plot(ax=india_map,
                    column=unit_mort["mort_intensity"],
                    markersize= unit_mort["mort_intensity"]*30,
                    cmap="inferno_r",
-                   legend=True)
+                   legend=True,
+                   legend_kwds={'label': "deaths/GWh",
+                             'orientation': "vertical"})
 
     #plt.title('Premature Mortality Intensity per Unit (deaths/GWh)', fontsize=10)
     #plt.xlabel("Longitude (°E)")

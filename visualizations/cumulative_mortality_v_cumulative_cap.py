@@ -14,6 +14,11 @@ def main():
     # import dataset containing mortality by unit
     unit_mort = pd.read_csv("/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/unit_mortality_and_ef.csv")
 
+    # filter out retired units
+    unit_mort = unit_mort[unit_mort["status"] != "retired"]
+
+    print(len(unit_mort))
+
     # create col to reflect mortality intensity
     unit_mort["sum_mean_delta_M_ij"] = unit_mort["sum_mean_delta_M_ij"].astype(float)
     unit_mort["mort_intensity"] = unit_mort["sum_mean_delta_M_ij"] / unit_mort["unit_capacity"]
@@ -33,7 +38,7 @@ def main():
 
     # export cumulative totals
     unit_mort.to_csv(
-        "/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/cum_mort_cap.csv",
+        "/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/cum_mort_cap_ex_ret.csv",
         index=False)
 
     # line chart of cumulative mortality against cumulative generation
@@ -41,16 +46,16 @@ def main():
     y = np.array(unit_mort["cum_mort_perc"])
 
     # overlays to highlight cut-offs
-    mort_markers = [25.002, 50.068, 75.015]
-    gen_markers = [4.466, 24.153, 53.896]
+    mort_markers = [25, 50, 75]
+    gen_markers = [4.9, 24.9, 54.05]
 
 
     plt.plot(x,y)
     plt.scatter(gen_markers, mort_markers, c="green")
-    plt.annotate("25% of mortality from 4.46% of capacity", (7,23))
-    plt.annotate("50.07%, 24.15%", (27, 47))
-    plt.annotate("75.02%, 53.9%", (57, 72))
-    plt.title("Cumulative Premature Mortality vs. Cumulative Capacity")
+    plt.annotate("25% of mortality from 4.9% of capacity", (8,23))
+    plt.annotate("50%, 24.9%", (28, 47))
+    plt.annotate("75%, 54.05%", (58, 72))
+    #plt.title("Cumulative Premature Mortality vs. Cumulative Capacity")
     plt.xlabel("Cumulative Capacity (% of total)")
     plt.ylabel("Cumulative Premature Mortality (% of total)")
 

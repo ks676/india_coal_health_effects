@@ -57,10 +57,6 @@ def main():
                     right_on=["unit"])
 
 
-    # filter out retired units
-
-    unit = unit[unit["status"] != "retired"]
-
     # save merged table as csv
     unit.to_csv("/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/unit_mortality_and_ef.csv", index=False)
 

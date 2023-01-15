@@ -17,14 +17,18 @@ def main():
     unit_mort.geometry = gdf.points_from_xy(unit_mort.longitude, unit_mort.latitude)
     unit_mort["sum_mean_delta_M_ij"] = unit_mort["sum_mean_delta_M_ij"].astype(float)
     # import states shapefile
-    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
+    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/Indian_States.shp")
 
     india_map = states.plot()
+
     unit_mort.plot(ax=india_map,
                    column=unit_mort["sum_mean_delta_M_ij"],
                    markersize= unit_mort["sum_mean_delta_M_ij"]/5,
                    cmap="inferno_r",
-                   legend=True)
+                   legend=True,
+                   legend_kwds={'label': "deaths/year",
+                             'orientation': "vertical"}
+                   )
 
     #plt.title('Annual Attributable Premature Mortality per Unit (deaths/year)', fontsize=10)
     #plt.xlabel("Longitude (°E)")
@@ -33,6 +37,8 @@ def main():
     plt.yticks([])
     plt.savefig("/Users/kiratsingh/Documents/coal_health_effects/visualizations/plots/unit_bubble_mort.png",
                 dpi=300)
+
+
     plt.show()
 
 

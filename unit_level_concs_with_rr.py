@@ -17,7 +17,7 @@ def main():
     output_directory = "/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/concs_with_rr"
 
     # open rr_by_state_and_endpoint dataset
-    rr = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/rr_by_state_and_endpoint.csv',
+    rr = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/rr_by_state_and_endpoint_gbd.csv',
                      index_col=False)
 
     # convert conc to string

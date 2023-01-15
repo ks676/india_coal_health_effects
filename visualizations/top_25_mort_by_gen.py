@@ -11,20 +11,20 @@ import matplotlib
 def main():
 
     # import states shapefile
-    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
+    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/Indian_States.shp")
 
     # import unit data
     units = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/output/visualization_tables/top_25_mort.csv",
                           index_col=False)
     units.crs = 'epsg:4326'
     units.geometry = gdf.points_from_xy(units.longitude, units.latitude)
-    units["sum_delta_M_ij"] = units["sum_delta_M_ij"].astype(float)
+    units["sum_mean_delta_M_ij"] = units["sum_mean_delta_M_ij"].astype(float)
     print(units.columns)
 
     india_map = states.plot()
     units.plot(ax=india_map,
-                   column=units["sum_delta_M_ij"],
-                   markersize=units["sum_delta_M_ij"]*0.5,
+                   column=units["sum_mean_delta_M_ij"],
+                   markersize=units["sum_mean_delta_M_ij"]*0.5,
                    cmap="inferno_r",
                    legend=True)
 

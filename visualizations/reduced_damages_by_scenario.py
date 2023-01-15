@@ -78,7 +78,7 @@ def main():
     plt.tight_layout()
 
     plt.savefig("/Users/kiratsingh/Documents/coal_health_effects/visualizations/plots/reduced_damages_by_scenario.png",
-                dpi=2400)
+                dpi=400)
     plt.show()
 
 main()

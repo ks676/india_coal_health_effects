@@ -21,7 +21,7 @@ def main():
     baseline_mortality = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/base_mortality_by_state_and_endpoint.csv',
         index_col=False)
 
-    pop_weighted_rr = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/pop_weighted_rr_by_state_and_endpoint.csv',
+    pop_weighted_rr = pd.read_csv('/Users/kiratsingh/Desktop/research/india_coal/health/output/pop_weighted_rr_by_state_and_endpoint_gbd.csv',
         index_col=False)
 
     # initialise tracker for progress monitoring

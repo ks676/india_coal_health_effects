@@ -11,7 +11,7 @@ import matplotlib
 def main():
 
     # import states shapefile
-    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
+    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/Indian_States.shp")
 
     # import source csv
     source = pd.read_csv(
@@ -33,7 +33,7 @@ def main():
     # merge exported mortality into shapefile
     states = pd.merge(states, net,
                       how="left",
-                      left_on=["NAME"],
+                      left_on=["st_nm"],
                       right_on=["state"])
 
     # plot chloropleth

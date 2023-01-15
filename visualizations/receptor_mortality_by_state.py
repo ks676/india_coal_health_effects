@@ -13,24 +13,24 @@ import matplotlib
 def main():
 
     # import states shapefile as geopandas df
-    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/2011_states.shp")
+    states = gdf.read_file("/Users/kiratsingh/Desktop/research/india_coal/health/input/maps/Indian_States.shp")
 
     # import by-unit-and-state dataset
     mort_by_state = pd.read_csv("/Users/kiratsingh/Desktop/research/india_coal/health/output/unit_level/csv/aggregations/fleet/by_unit_and_state.csv")
 
     # aggregate receptor mortality by state
-    mort_by_state = mort_by_state.groupby(['state'], as_index=False).agg({'Delta_M_i_j': 'sum'})
+    mort_by_state = mort_by_state.groupby(['state'], as_index=False).agg({'mean_Delta_M_i_j': 'sum'})
 
     # join in mort_by_state onto states to create chloropleth map
     states = pd.merge(states, mort_by_state,
                     how="left",
-                    left_on=["NAME"],
+                    left_on=["st_nm"],
                     right_on=["state"])
 
-    states['Delta_M_i_j'] = states['Delta_M_i_j'].fillna(0)
+    states['mean_Delta_M_i_j'] = states['mean_Delta_M_i_j'].fillna(0)
 
     # plot chloropleth
-    states.plot(column='Delta_M_i_j',
+    states.plot(column='mean_Delta_M_i_j',
                 cmap="inferno_r",
                 legend=True)
 
@@ -41,7 +41,7 @@ def main():
     plt.show()
 
     # rename columns
-    states = states.rename(columns={"Delta_M_i_j": "receptor_mort"})
+    states = states.rename(columns={"mean_Delta_M_i_j": "receptor_mort"})
 
     # select cols
     states = states[["state", "receptor_mort"]]
